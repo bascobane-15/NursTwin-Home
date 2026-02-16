@@ -79,10 +79,11 @@ with st.sidebar:
     st.divider()
     nurse_note = st.text_area("Hemşire Gözlem Notu:", height=100, placeholder="Klinik notlarınızı buraya yazın...")
     
-    st.divider()
+      st.divider()
     st.subheader("📥 Raporlama")
     report_placeholder = st.empty()
-    # Dosyanın en sonuna ekle
+
+ # Dosyanın en sonuna ekle
 if sayfa_secimi == "🛰️ Gerçek Veri Entegrasyonu":
     st.header("🛰️ Ayşe Hanım - Canlı İzleme Paneli")
     
@@ -101,9 +102,8 @@ if sayfa_secimi == "🛰️ Gerçek Veri Entegrasyonu":
                 if skor < 30:
                     uyari.error("⚠️ Ayşe Hanım Hareketsiz! Basınç Yaralanması Riski.")
                 else:
-                    uyari.success("✅ Hareketlilik Algılandı.")
+                    uyari.success("Hareketlilik Algılandı.")
             else:
                 st.warning("Bağlantı yok. Phyphox'u kontrol edin.")
                 break
             time.sleep(0.5)
-
