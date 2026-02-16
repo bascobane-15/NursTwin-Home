@@ -1,13 +1,28 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import time
 import plotly.graph_objects as go
 from datetime import datetime
 import base64
 
 # --- 1. SAYFA VE STİL YAPILANDIRMASI ---
-st.set_page_config(page_title="NursTwin-Home: Bütünsel Bakım Yönetimi", layout="wide")
+st.set_page_config(page_title="Kutup Dijital İkiz v2", layout="wide")
+
+# --- KESİN ÇÖZÜM CSS ---
+st.markdown("""
+<style>
+    .stApp { background-color: #0a192f; color: white; }
+    [data-testid="stSidebar"] { background-color: #F0F8FF !important; border-right: 1px solid #dee2e6; }
+    [data-testid="stSidebar"] p, [data-testid="stSidebar"] span, [data-testid="stSidebar"] label { 
+        color: #000000 !important; font-weight: 700 !important; 
+    }
+    div[data-testid="metric-container"] { 
+        background-color: rgba(0, 212, 255, 0.1); border: 1px solid #00d4ff; padding: 15px; border-radius: 12px; 
+    }
+    [data-testid="stMetricValue"] { color: #A0D6E8 !important; }
+    [data-testid="stMetricLabel"] { color: #E1FFFF !important; }
+</style>
+""", unsafe_allow_html=True)
 
 # --- 2. ÇOKLU HASTA VERİ YAPISI ---
 if 'patients' not in st.session_state:
@@ -17,22 +32,8 @@ if 'patients' not in st.session_state:
         "Fatma Hanım": pd.DataFrame()
     }
 
-# --- 3. YARDIMCI FONKSİYONLAR (MİMARİ KATMAN B & C) ---
-
-def create_report_download(df, note, status, nandas, patient_name):
-    """Klinik verileri indirilebilir bir metin dosyasına dönüştürür."""
-    report_text = f"NursTwin-Home Klinik Raporu - {patient_name}\n{'='*45}\n"
-    report_text += f"Rapor Tarihi: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n"
-    report_text += f"Genel Durum: {status}\n"
-    report_text += f"Tespit Edilen NANDA Tanıları: {', '.join(nandas) if nandas else 'Normal'}\n"
-    report_text += f"Hemşire Notu: {note if note else 'Not girilmedi.'}\n\n"
-    report_text += f"SON VİTAL BULGULAR:\n{df.head(10).to_string(index=False)}\n"
-    
-    b64 = base64.b64encode(report_text.encode('utf-8-sig')).decode()
-    return f'<a href="data:file/txt;base64,{b64}" download="NursTwin_{patient_name}_Rapor.txt" style="text-decoration:none;"><button style="width:100%; cursor:pointer; background-color:#4CAF50; color:white; border:none; padding:10px; border-radius:5px;">📥 Klinik Raporu İndir</button></a>'
-
+# --- 3. YARDIMCI FONKSİYONLAR ---
 def get_simulated_data(patient_name):
-    """Mimarideki 'Donanım/Sensör' katmanını simüle eder."""
     base_pulse = 75 if "Ayşe" in patient_name else 88 if "Mehmet" in patient_name else 70
     return {
         "Tarih": datetime.now().strftime("%H:%M:%S"),
@@ -43,69 +44,74 @@ def get_simulated_data(patient_name):
     }
 
 def analyze_logic(df, note, braden, itaki):
-    """Karar Motoru: NANDA ve NIC önerilerini üretir."""
     if df.empty: return "Normal", [], [], "green"
     last = df.iloc[0]
     risks, nics = [], []
-    
-    # NANDA Tanılama Algoritması
-    if last["Nabız"] > 105 or itaki > 12 or "baş dönmesi" in note.lower():
+    if last["Nabız"] > 105 or itaki > 12:
         risks.append("NANDA: Düşme Riski (00155)")
         nics.extend(["NIC: Düşmeleri Önleme (6490)", "NIC: Çevre Düzenlemesi (6486)"])
-    
-    if df["Hareket_Skoru"].head(5).mean() < 30 or braden < 14:
+    if last["Hareket_Skoru"] < 30 or braden < 14:
         risks.append("NANDA: Basınç Yaralanması Riski (00249)")
         nics.extend(["NIC: Pozisyon Yönetimi (0840)", "NIC: Basınçlı Bölge Bakımı (3500)"])
-
     status = "⚠️ KRİTİK" if len(risks) > 1 else "🟡 UYARI" if len(risks) == 1 else "✅ STABİL"
     color = "red" if status == "⚠️ KRİTİK" else "orange" if status == "🟡 UYARI" else "green"
     return status, risks, nics, color
 
-def check_mobile_alerts(status, nandas, patient_name):
-    """İletişim Katmanı: Mobil bildirim simülasyonu yapar."""
-    if status == "⚠️ KRİTİK":
-        st.toast(f"🚨 MOBİL UYARI: {patient_name} için acil kontrol gerekli!", icon="📱")
-
-# --- 4. SIDEBAR: HASTA SEÇİMİ VE VERİ GİRİŞİ (KATMAN A) ---
+# --- 4. SIDEBAR ---
 with st.sidebar:
+    st.title("🚀 Görev Kontrol")
+    sayfa_secimi = st.selectbox("Bölüm Seçiniz:", ["🏠 Ana Kontrol Paneli", "📊 Fizyolojik Derin Analiz", "🚨 Acil Durum Rehberi"])
+    
+    st.divider()
     st.header("👥 Hasta Portföyü")
     selected_patient = st.selectbox("İzlenecek Hastayı Seçin:", list(st.session_state.patients.keys()))
     
     st.divider()
     st.header(f"📋 {selected_patient} Değerlendirme")
-    braden_score = st.slider("Braden (Bası Riski)", 6, 23, 16, key=f"braden_{selected_patient}")
-    itaki_score = st.slider("Itaki (Düşme Riski)", 0, 20, 8, key=f"itaki_{selected_patient}")
-    
-    st.divider()
-    nurse_note = st.text_area("Hemşire Gözlem Notu:", height=100, placeholder="Klinik notlarınızı buraya yazın...")
-    
-    st.divider()
-    st.subheader("📥 Raporlama")
-    report_placeholder = st.empty()
+    braden_score = st.slider("Braden (Bası Riski)", 6, 23, 16)
+    itaki_score = st.slider("Itaki (Düşme Riski)", 0, 20, 8)
+    nurse_note = st.text_area("Hemşire Gözlem Notu:", placeholder="Klinik notlarınızı buraya yazın...")
 
- # Dosyanın en sonuna ekle
-if sayfa_secimi == "🛰️ Gerçek Veri Entegrasyonu":
-    st.header("🛰️ Ayşe Hanım - Canlı İzleme Paneli")
+# --- 5. ANA PANEL ---
+if sayfa_secimi == "🏠 Ana Kontrol Paneli":
+    st.title(f"🩺 NursTwin-Home: {selected_patient} Dijital İkiz Paneli")
     
-    if st.button("🔴 Canlı Veri Akışını Başlat"):
-        k1, k2 = st.columns(2)
-        uyari = st.empty()
+    # Veri Güncelleme Butonu
+    if st.button("Verileri Simüle Et"):
+        yeni_veri = get_simulated_data(selected_patient)
+        st.session_state.patients[selected_patient] = pd.concat([pd.DataFrame([yeni_veri]), st.session_state.patients[selected_patient]]).head(50)
+    
+    df = st.session_state.patients[selected_patient]
+    if not df.empty:
+        status, nandas, nics, color = analyze_logic(df, nurse_note, braden_score, itaki_score)
         
-        while True:
-            ivme = get_phyphox_live_data() # Yukarıdaki fonksiyonu çağırır
+        # Metrik Kutuları
+        last = df.iloc[0]
+        m1, m2, m3, m4, m5 = st.columns(5)
+        m1.metric("Nabız", f"{last['Nabız']} bpm")
+        m2.metric("SpO2", f"%{last['SpO2']}")
+        m3.metric("Ateş", f"{last['Ateş']}°C")
+        m4.metric("Risk Skoru", f"%{last['Hareket_Skoru']}")
+        m5.metric("Durum", status)
+
+        st.divider()
+        
+        # Grafik ve Tablo
+        col1, col2 = st.columns([2, 1])
+        with col1:
+            st.subheader("📈 Dijital İkiz Trend Analizi")
+            fig = go.Figure()
+            fig.add_trace(go.Scatter(y=df["Nabız"], mode='lines+markers', line=dict(color='red')))
+            fig.update_layout(template="plotly_dark")
+            st.plotly_chart(fig, use_container_width=True)
             
-            if ivme is not None:
-                k1.metric("Telefon İvmesi", f"{ivme:.2f} m/s²")
-                skor = min(int(ivme * 10), 100)
-                k2.metric("Hareket Skoru", skor)
-                
-                if skor < 30:
-                    uyari.error("⚠️ Ayşe Hanım Hareketsiz! Basınç Yaralanması Riski.")
-                else:
-                    uyari.success("✅ Hareketlilik Algılandı.")
-            else:
-                st.warning("Bağlantı yok. Phyphox'u kontrol edin.")
-                break
-            time.sleep(0.5)
-
-
+            st.subheader("📂 Gerçek Zamanlı Sistem Kayıtları")
+            st.dataframe(df, use_container_width=True)
+        
+        with col2:
+            st.subheader("📋 Karar Destek (NIC)")
+            st.write(f"**Aktif NANDA Tanıları:** {', '.join(nandas) if nandas else 'Yok'}")
+            for nic in nics:
+                st.checkbox(nic, value=True)
+    else:
+        st.info("Lütfen veri akışını başlatmak için butona basın.")
