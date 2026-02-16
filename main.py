@@ -79,7 +79,65 @@ with st.sidebar:
     st.divider()
     nurse_note = st.text_area("Hemşire Gözlem Notu:", height=100, placeholder="Klinik notlarınızı buraya yazın...")
     
-      st.divider()
+    st.divider()
     st.subheader("📥 Raporlama")
     report_placeholder = st.empty()
 
+# --- 5. ANA PANEL (KATMAN C) ---
+st.title(f"🩺 NursTwin-Home: {selected_patient} Dijital İkiz Paneli")
+placeholder = st.empty()
+
+while True:
+    # Arka planda tüm hastalar için veri üretimi (Paralel İşleme)
+    for p_name in st.session_state.patients:
+        new_data = get_simulated_data(p_name)
+        st.session_state.patients[p_name] = pd.concat([pd.DataFrame([new_data]), st.session_state.patients[p_name]]).head(50)
+    
+    # Mevcut seçili hastanın analizi
+    current_df = st.session_state.patients[selected_patient]
+    status, nandas, nics, color = analyze_logic(current_df, nurse_note, braden_score, itaki_score)
+    
+    # Mobil Bildirim Tetikleyici
+    check_mobile_alerts(status, nandas, selected_patient)
+
+    # Rapor Butonu Güncelleme
+    if not current_df.empty:
+        report_link = create_report_download(current_df, nurse_note, status, nandas, selected_patient)
+        report_placeholder.markdown(report_link, unsafe_allow_html=True)
+
+    with placeholder.container():
+        # Üst Metrik Kartları
+        m1, m2, m3, m4, m5 = st.columns(5)
+        last_val = current_df.iloc[0]
+        m1.metric("Nabız", f"{last_val['Nabız']} bpm")
+        m2.metric("SpO2", f"%{last_val['SpO2']}")
+        m3.metric("Ateş", f"{last_val['Ateş']}°C")
+        risk_val = int((20-braden_score)*3 + itaki_score*4)
+        m4.metric("Risk Skoru", f"%{risk_val}")
+        m5.metric("Durum", status)
+
+        st.divider()
+
+        # Grafik ve Bakım Planı
+        l_col, r_col = st.columns([2, 1])
+        
+        with l_col:
+            st.subheader("📈 Dijital İkiz Trend Analizi")
+            fig = go.Figure()
+            fig.add_trace(go.Scatter(y=current_df["Nabız"].iloc[::-1], name="Mevcut Nabız", line=dict(color='red', width=2)))
+            # Gelecek Tahmini (AI Katmanı)
+            future_y = [last_val['Nabız'], last_val['Nabız'] + (6 if last_val['Nabız'] > 95 else -2)]
+            fig.add_trace(go.Scatter(x=[len(current_df), len(current_df)+3], y=future_y, name="Tahmin (AI)", line=dict(color='gray', dash='dot')))
+            st.plotly_chart(fig, use_container_width=True)
+
+        with r_col:
+            st.subheader("📋 Karar Destek (NIC)")
+            st.markdown(f"**Aktif NANDA Tanıları:**\n{', '.join(nandas) if nandas else 'Normal'}")
+            st.divider()
+            for nic in nics:
+                st.checkbox(nic, key=f"{nic}_{selected_patient}_{time.time()}")
+
+        st.subheader("📂 Gerçek Zamanlı Sistem Kayıtları")
+        st.dataframe(current_df.head(10), use_container_width=True)
+
+    time.sleep(3)
