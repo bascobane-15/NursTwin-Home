@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+import requests
 import time
 import plotly.graph_objects as go
 from datetime import datetime
@@ -18,7 +19,25 @@ if 'patients' not in st.session_state:
     }
 
 # --- 3. YARDIMCI FONKSİYONLAR (MİMARİ KATMAN B & C) ---
-
+def get_phyphox_live_data():
+    # Senin telefonunun adresi
+    url = "http://192.168.1.102:8080/get?linear_acceleration"
+    try:
+        # Telefona bağlanmayı dene (en fazla 0.5 saniye bekle)
+        response = requests.get(url, timeout=0.5)
+        data = response.json()
+        
+        # Telefonun X, Y ve Z hareketlerini alalım
+        x = data['buffer']['linear_accelerationX']['buffer'][0]
+        y = data['buffer']['linear_accelerationY']['buffer'][0]
+        z = data['buffer']['linear_accelerationZ']['buffer'][0]
+        
+        # Bunları tek bir hareket şiddeti sayısına dönüştürelim
+        total_acc = (x**2 + y**2 + z**2)**0.5
+        return total_acc
+    except:
+        # Eğer telefon bağlı değilse "None" (hiçbir şey) döndür
+        return None
 def create_report_download(df, note, status, nandas, patient_name):
     """Klinik verileri indirilebilir bir metin dosyasına dönüştürür."""
     report_text = f"NursTwin-Home Klinik Raporu - {patient_name}\n{'='*45}\n"
@@ -136,8 +155,9 @@ while True:
             st.divider()
             for nic in nics:
                 st.checkbox(nic, key=f"{nic}_{selected_patient}_{time.time()}")
-
+21. satırda def get_phyphox_live_data(): fonksiyonunu başlatmışsın. Bu kısım da TAMAM. ✅ (Sadece fonksiyonun içindeki return kısmını bitirdiğinden emin ol)
         st.subheader("📂 Gerçek Zamanlı Sistem Kayıtları")
         st.dataframe(current_df.head(10), use_container_width=True)
 
     time.sleep(3)
+
