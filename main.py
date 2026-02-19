@@ -82,7 +82,17 @@ with st.sidebar:
     st.header(f"📋 {selected_patient} Değerlendirme")
     braden_score = st.slider("Braden (Bası Riski)", 6, 23, 16, key=f"braden_{selected_patient}")
     itaki_score = st.slider("Itaki (Düşme Riski)", 0, 20, 8, key=f"itaki_{selected_patient}")
-    
+    st.markdown("---")
+
+st.subheader("Canlı Sensör")
+
+if st.button("Yeni Sensör Verisi Al"):
+    st.session_state.sensor_data = {
+        "Nabız": random.randint(60, 110),
+        "Tansiyon": random.randint(100, 150),
+        "Oksijen": random.randint(90, 100)
+    }
+
     st.divider()
     nurse_note = st.text_area("Hemşire Gözlem Notu:", height=100, placeholder="Klinik notlarınızı buraya yazın...")
     
@@ -93,7 +103,11 @@ with st.sidebar:
 # --- 5. ANA PANEL (KATMAN C) ---
 st.title(f"🩺 NursTwin-Home: {selected_patient} Dijital İkiz Paneli")
 placeholder = st.empty()
+st.subheader("Canlı Sensör Verileri")
 
+if "sensor_data" in st.session_state:
+    df = pd.DataFrame([st.session_state.sensor_data])
+    st.bar_chart(df)
 while True:
     # Arka planda tüm hastalar için veri üretimi (Paralel İşleme)
     for p_name in st.session_state.patients:
@@ -164,6 +178,7 @@ with l_col:
         ))
 
     st.plotly_chart(fig, use_container_width=True)
+
 
 
 
