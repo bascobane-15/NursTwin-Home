@@ -11,25 +11,11 @@ st.set_page_config(page_title="NursTwin-Home: Bütünsel Bakım Yönetimi", layo
 
 # --- 2. ÇOKLU HASTA VERİ YAPISI ---
 st.session_state.patients = {
-    "Ayşe Hanım": {
-        "nabiz": 80,
-        "ates": 37.7,
-        "spo2": 97,
-        "risk": 0
-    },
-    "Mehmet Bey": {
-        "nabiz": 92,
-        "ates": 38.2,
-        "spo2": 95,
-        "risk": 0
-    },
-    "Fatma Hanım": {
-        "nabiz": 72,
-        "ates": 36.8,
-        "spo2": 98,
-        "risk": 0
-    }
+    "Ayşe Hanım": pd.DataFrame(),
+    "Mehmet Bey": pd.DataFrame(),
+    "Fatma Hanım": pd.DataFrame()
 }
+
 
 
 # --- 3. YARDIMCI FONKSİYONLAR (MİMARİ KATMAN B & C) ---
@@ -156,4 +142,5 @@ while True:
         st.dataframe(current_df.head(10), use_container_width=True)
 
     time.sleep(3)
+
 
