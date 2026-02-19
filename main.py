@@ -135,20 +135,6 @@ if not current_df.empty:
 l_col, r_col = st.columns(2)
 
 
-    # ✅ Hemşire Notu Butonun İçinde Değil!
-nurse_note = st.text_area(
-    "Hemşire Gözlem Notu:",
-     height=100,
-     placeholder="Klinik notlarınızı buraya yazın..."
-    )
-
-st.divider()
-
-    # ✅ Rapor Alanı
-st.subheader("📥 Raporlama")
-report_placeholder = st.empty()
-
-
 # --- 5. ANA PANEL (KATMAN C) ---
 st.title(f"🩺 NursTwin-Home: {selected_patient} Dijital İkiz Paneli")
 
@@ -250,6 +236,7 @@ with r_col:
     use_container_width=True,
     key="vital_trend_chart"
 )
+
 
 
 
