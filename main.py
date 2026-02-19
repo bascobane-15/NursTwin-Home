@@ -225,7 +225,13 @@ with r_col:
             line=dict(color='gray', dash='dot')
         ))
 
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(
+    fig,
+    use_container_width=True,
+    key="vital_trend_chart"
+)
+
+
 
 
 
