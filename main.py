@@ -165,9 +165,9 @@ with r_col:
         )
 
         st.markdown(report_link, unsafe_allow_html=True)
-
 else:
-    st.info("Henüz sensör verisi yok. Lütfen 'Yeni Sensör Verisi Al' butonuna basın.")
+        st.info("Henüz sensör verisi yok. Lütfen 'Yeni Sensör Verisi Al' butonuna basın.")
+
 
 
 
