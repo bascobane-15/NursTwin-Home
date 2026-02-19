@@ -11,14 +11,20 @@ st.set_page_config(page_title="NursTwin-Home: Bütünsel Bakım Yönetimi", layo
 
 # --- 2. ÇOKLU HASTA VERİ YAPISI ---
 st.session_state.patients = {
-    "Ayşe Hanım": pd.DataFrame(),
-    "Mehmet Bey": pd.DataFrame(),
-    "Fatma Hanım": pd.DataFrame()
+"Ayşe Hanım": pd.DataFrame(columns=["Zaman", "Nabız", "Ateş", "SpO2"]),
+"Mehmet Bey": pd.DataFrame(columns=["Zaman", "Nabız", "Ateş", "SpO2"]),
+"Fatma Hanım": pd.DataFrame(columns=["Zaman", "Nabız", "Ateş", "SpO2"]),
 }
 
 
-
 # --- 3. YARDIMCI FONKSİYONLAR (MİMARİ KATMAN B & C) ---
+def simulate_sensor_data():
+    return {
+        "Zaman": datetime.now(),
+        "Nabız": np.random.randint(70, 110),
+        "Ateş": round(np.random.uniform(36.5, 38.5), 1),
+        "SpO2": np.random.randint(94, 100)
+    }
 
 def create_report_download(df, note, status, nandas, patient_name):
     """Klinik verileri indirilebilir bir metin dosyasına dönüştürür."""
@@ -142,5 +148,6 @@ while True:
         st.dataframe(current_df.head(10), use_container_width=True)
 
     time.sleep(3)
+
 
 
