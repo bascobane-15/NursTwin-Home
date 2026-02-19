@@ -129,7 +129,7 @@ if not current_df.empty:
     with l_col:
         st.subheader("📈 Vital Bulgular Trend")
 
-        # --- PRO LEVEL LONG FORMAT ---
+    # --- PRO LEVEL LONG FORMAT ---
 df_long = current_df.melt(
     id_vars="Zaman",
     value_vars=["Nabız", "SpO2", "Ateş"],
@@ -150,7 +150,6 @@ st.plotly_chart(fig, use_container_width=True, key="vital_chart")
 
 st.plotly_chart(fig, use_container_width=True, key="vital_chart")
 
-
     with r_col:
         st.subheader("🧠 AI Klinik Yorum")
         st.write("Durum:", status)
@@ -169,6 +168,7 @@ st.plotly_chart(fig, use_container_width=True, key="vital_chart")
 
 else:
     st.info("Henüz sensör verisi yok. Lütfen 'Yeni Sensör Verisi Al' butonuna basın.")
+
 
 
 
