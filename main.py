@@ -112,7 +112,7 @@ if not current_df.empty:
         report_link = create_report_download(current_df, nurse_note, status, nandas, selected_patient)
         report_placeholder.markdown(report_link, unsafe_allow_html=True)
 
- with placeholder.container():
+with placeholder.container():
         # Üst Metrik Kartları
         m1, m2, m3, m4, m5 = st.columns(5)
         last_val = current_df.iloc[0]
@@ -164,6 +164,7 @@ if not current_df.empty:
         ))
 
   st.plotly_chart(fig, use_container_width=True)
+
 
 
 
