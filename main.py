@@ -141,6 +141,8 @@ if "sensor_data" in st.session_state:
 # --- 5. ANA PANEL (KATMAN C) ---
 st.title(f"🩺 NursTwin-Home: {selected_patient} Dijital İkiz Paneli")
 
+st.subheader("📊 Canlı Sensör Verileri")
+
 while True:
     # Arka planda tüm hastalar için veri üretimi (Paralel İşleme)
     for p_name in st.session_state.patients:
@@ -211,6 +213,7 @@ with l_col:
         ))
 
     st.plotly_chart(fig, use_container_width=True)
+
 
 
 
