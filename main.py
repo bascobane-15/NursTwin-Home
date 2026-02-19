@@ -185,6 +185,8 @@ if not current_df.empty:
         
 l_col, r_col = st.columns(2)
 
+l_col, r_col = st.columns(2)
+
 with l_col:
     st.subheader("📈 Vital Bulgular Trend")
     fig = px.line(
@@ -198,6 +200,8 @@ with l_col:
 with r_col:
     st.subheader("🧠 AI Klinik Yorum")
     st.write("Durum:", status)
+    st.write("Olası NANDA Tanıları:", nandas)
+    st.write("Önerilen NIC Müdahaleleri:", nics)
 
 
     if not current_df.empty:
@@ -222,6 +226,7 @@ with r_col:
         ))
 
     st.plotly_chart(fig, use_container_width=True)
+
 
 
 
