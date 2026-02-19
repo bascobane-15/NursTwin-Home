@@ -3,6 +3,8 @@ import pandas as pd
 import random
 import numpy as np
 import time
+import plotly.express as px
+
 import plotly.graph_objects as go
 from datetime import datetime
 import base64
@@ -225,6 +227,7 @@ with r_col:
         ))
 
     st.plotly_chart(fig, use_container_width=True)
+
 
 
 
