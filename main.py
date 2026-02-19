@@ -146,7 +146,6 @@ current_df = st.session_state.patients[selected_patient]
 # Analiz
 status, nandas, nics, color = analyze_logic(
     current_df,
-    nurse_note,
     braden_score,
     itaki_score
 )
@@ -236,6 +235,7 @@ with r_col:
     use_container_width=True,
     key="vital_trend_chart"
 )
+
 
 
 
