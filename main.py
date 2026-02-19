@@ -130,7 +130,7 @@ with placeholder.container():
         
 with l_col:
   
-if st.button("Yeni Sensör Verisi Al"):
+  if st.button("Yeni Sensör Verisi Al"):
         new_data = simulate_sensor_data()
         df = st.session_state.patients[selected_patient]
         df = pd.concat([df, pd.DataFrame([new_data])], ignore_index=True)
@@ -142,7 +142,7 @@ if st.button("Yeni Sensör Verisi Al"):
 
     fig = go.Figure()
 
-if not current_df.empty:
+  if not current_df.empty:
         last_val = current_df.iloc[-1]
 
         fig.add_trace(go.Scatter(
@@ -164,6 +164,7 @@ if not current_df.empty:
         ))
 
   st.plotly_chart(fig, use_container_width=True)
+
 
 
 
