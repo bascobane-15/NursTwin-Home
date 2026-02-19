@@ -132,18 +132,20 @@ st.title(f"🩺 NursTwin-Home: {selected_patient} Dijital İkiz Paneli")
 
 st.subheader("📊 Canlı Sensör Verileri")
 
-while True:
-    # Arka planda tüm hastalar için veri üretimi (Paralel İşleme)
-    for p_name in st.session_state.patients:
-        new_data = get_simulated_data(p_name)
-        st.session_state.patients[p_name] = pd.concat([pd.DataFrame([new_data]), st.session_state.patients[p_name]]).head(50)
-    
-    # Mevcut seçili hastanın analizi
-    current_df = st.session_state.patients[selected_patient]
-    status, nandas, nics, color = analyze_logic(current_df, nurse_note, braden_score, itaki_score)
-    
-    # Mobil Bildirim Tetikleyici
-    check_mobile_alerts(status, nandas, selected_patient)
+# Mevcut seçili hastanın verisi
+current_df = st.session_state.patients[selected_patient]
+
+# Analiz
+status, nandas, nics, color = analyze_logic(
+    current_df,
+    nurse_note,
+    braden_score,
+    itaki_score
+)
+
+# Mobil Bildirim
+check_mobile_alerts(status, nandas, selected_patient)
+
 
     # Rapor Butonu Güncelleme
 if not current_df.empty:
@@ -168,13 +170,16 @@ with placeholder.container():
         
 with l_col:
 
-    if st.button("Yeni Sensör Verisi Al"):
-        new_data = simulate_sensor_data()
-        df = st.session_state.patients[selected_patient]
-        df = pd.concat([df, pd.DataFrame([new_data])], ignore_index=True)
-        st.session_state.patients[selected_patient] = df
+   if st.button("Yeni Sensör Verisi Al"):
+    new_data = get_simulated_data(selected_patient)
 
-    current_df = st.session_state.patients[selected_patient]
+    df = st.session_state.patients[selected_patient]
+    df = pd.concat([pd.DataFrame([new_data]), df]).head(50)
+
+    st.session_state.patients[selected_patient] = df
+
+    st.rerun()
+
 
     st.subheader("📈 Dijital İkiz Trend Analizi")
 
@@ -202,6 +207,7 @@ with l_col:
         ))
 
     st.plotly_chart(fig, use_container_width=True)
+
 
 
 
