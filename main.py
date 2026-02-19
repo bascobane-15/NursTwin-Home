@@ -200,11 +200,6 @@ with r_col:
     st.write("Durum:", status)
 
 
-
-    st.subheader("📈 Dijital İkiz Trend Analizi")
-
-    fig = go.Figure()
-
     if not current_df.empty:
         last_val = current_df.iloc[-1]
 
@@ -227,6 +222,7 @@ with r_col:
         ))
 
     st.plotly_chart(fig, use_container_width=True)
+
 
 
 
