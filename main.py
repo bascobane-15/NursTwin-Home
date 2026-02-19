@@ -176,10 +176,10 @@ if not current_df.empty:
     m4.metric("Risk Skoru", f"%{risk_val}")
     m5.metric("Durum", status)
 
-        st.divider()
+    st.divider()
 
-        # Grafik ve Bakım Planı
-        l_col, r_col = st.columns([2, 1])
+    # Grafik ve Bakım Planı
+    l_col, r_col = st.columns([2, 1])
         
 with l_col:
 
@@ -220,6 +220,7 @@ with l_col:
         ))
 
     st.plotly_chart(fig, use_container_width=True)
+
 
 
 
