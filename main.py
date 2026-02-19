@@ -127,7 +127,12 @@ while True:
 
         # Grafik ve Bakım Planı
         l_col, r_col = st.columns([2, 1])
-        
+       if st.button("Yeni Sensör Verisi Al"):
+    new_data = simulate_sensor_data()
+    df = st.session_state.patients[selected_patient]
+    df = pd.concat([df, pd.DataFrame([new_data])], ignore_index=True)
+    st.session_state.patients[selected_patient] = df
+
         with l_col:
             st.subheader("📈 Dijital İkiz Trend Analizi")
             fig = go.Figure()
@@ -148,6 +153,7 @@ while True:
         st.dataframe(current_df.head(10), use_container_width=True)
 
     time.sleep(3)
+
 
 
 
