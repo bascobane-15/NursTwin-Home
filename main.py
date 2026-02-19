@@ -175,15 +175,7 @@ with l_col:
         st.session_state.patients[selected_patient] = df
 
     current_df = st.session_state.patients[selected_patient]
-# --------------------------------------------------------
-# ANA PANEL (Sidebar DIŞI)
-# --------------------------------------------------------
 
-st.subheader("📊 Canlı Sensör Verileri")
-
-if "sensor_data" in st.session_state:
-    df = pd.DataFrame([st.session_state.sensor_data])
-    st.bar_chart(df)
     st.subheader("📈 Dijital İkiz Trend Analizi")
 
     fig = go.Figure()
@@ -210,6 +202,7 @@ if "sensor_data" in st.session_state:
         ))
 
     st.plotly_chart(fig, use_container_width=True)
+
 
 
 
