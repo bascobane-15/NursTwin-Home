@@ -145,8 +145,6 @@ with l_col:
     if not current_df.empty:
         last_val = current_df.iloc[-1]
 
-        last_val = current_df.iloc[-1]
-
         fig.add_trace(go.Scatter(
             y=current_df["Nabız"],
             name="Mevcut Nabız",
@@ -165,7 +163,7 @@ with l_col:
             line=dict(color='gray', dash='dot')
         ))
 
-  st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, use_container_width=True)
 
 
 
