@@ -108,7 +108,6 @@ if not current_df.empty:
         braden_score,
         itaki_score
     )
-
     # --- METRİKLER ---
     m1, m2, m3, m4, m5 = st.columns(5)
     last = current_df.iloc[0]
@@ -126,31 +125,28 @@ if not current_df.empty:
     # --- GRAFİK + ANALİZ ---
     l_col, r_col = st.columns([2, 1])
 
-with l_col:
+    with l_col:
         st.subheader("📈 Vital Bulgular Trend")
 
-    # --- PRO LEVEL LONG FORMAT ---
-df_long = current_df.melt(
-    id_vars="Zaman",
-    value_vars=["Nabız", "SpO2", "Ateş"],
-    var_name="Parametre",
-    value_name="Değer"
-)
+        # --- PRO LEVEL LONG FORMAT ---
+        df_long = current_df.melt(
+            id_vars="Zaman",
+            value_vars=["Nabız", "SpO2", "Ateş"],
+            var_name="Parametre",
+            value_name="Değer"
+        )
 
-fig = px.line(
-    df_long,
-    x="Zaman",
-    y="Değer",
-    color="Parametre",
-    markers=True
-)
+        fig = px.line(
+            df_long,
+            x="Zaman",
+            y="Değer",
+            color="Parametre",
+            markers=True
+        )
 
-st.plotly_chart(fig, use_container_width=True, key="vital_chart")
+        st.plotly_chart(fig, use_container_width=True, key="vital_chart")
 
-
-st.plotly_chart(fig, use_container_width=True, key="vital_chart")
-
-with r_col:
+    with r_col:
         st.subheader("🧠 AI Klinik Yorum")
         st.write("Durum:", status)
         st.write("Olası NANDA Tanıları:", nandas if nandas else "Yok")
@@ -165,8 +161,11 @@ with r_col:
         )
 
         st.markdown(report_link, unsafe_allow_html=True)
+
+        st.markdown(report_link, unsafe_allow_html=True)
 else:
         st.info("Henüz sensör verisi yok. Lütfen 'Yeni Sensör Verisi Al' butonuna basın.")
+
 
 
 
