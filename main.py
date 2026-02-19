@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import random
 import numpy as np
 import time
 import plotly.graph_objects as go
@@ -210,6 +211,7 @@ with l_col:
         ))
 
     st.plotly_chart(fig, use_container_width=True)
+
 
 
 
