@@ -146,7 +146,7 @@ st.divider()
 
     # ✅ Rapor Alanı
 st.subheader("📥 Raporlama")
-    report_placeholder = st.empty()
+report_placeholder = st.empty()
 
 
 # --- 5. ANA PANEL (KATMAN C) ---
@@ -250,6 +250,7 @@ with r_col:
     use_container_width=True,
     key="vital_trend_chart"
 )
+
 
 
 
