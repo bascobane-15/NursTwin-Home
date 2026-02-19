@@ -151,9 +151,10 @@ check_mobile_alerts(status, nandas, selected_patient)
 if not current_df.empty:
         report_link = create_report_download(current_df, nurse_note, status, nandas, selected_patient)
         report_placeholder.markdown(report_link, unsafe_allow_html=True)
+    
+if not current_df.empty:
+    last_val = current_df.iloc[0]
 
-# Üst Metrik Kartları
-m1, m2, m3, m4, m5 = st.columns(5)
 
         # Üst Metrik Kartları
         m1, m2, m3, m4, m5 = st.columns(5)
@@ -209,6 +210,7 @@ with l_col:
         ))
 
     st.plotly_chart(fig, use_container_width=True)
+
 
 
 
