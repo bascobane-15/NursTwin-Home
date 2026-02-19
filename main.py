@@ -153,18 +153,28 @@ if not current_df.empty:
         report_placeholder.markdown(report_link, unsafe_allow_html=True)
     
 if not current_df.empty:
+    report_link = create_report_download(
+        current_df,
+        nurse_note,
+        status,
+        nandas,
+        selected_patient
+    )
+    report_placeholder.markdown(report_link, unsafe_allow_html=True)
+
+# 👇 BURASI AYNI HİZADA OLMALI
+if not current_df.empty:
+    m1, m2, m3, m4, m5 = st.columns(5)
+
     last_val = current_df.iloc[0]
 
+    m1.metric("Nabız", f"{last_val['Nabız']} bpm")
+    m2.metric("SpO2", f"%{last_val['SpO2']}")
+    m3.metric("Ateş", f"{last_val['Ateş']}°C")
 
-        # Üst Metrik Kartları
-        m1, m2, m3, m4, m5 = st.columns(5)
-        last_val = current_df.iloc[0]
-        m1.metric("Nabız", f"{last_val['Nabız']} bpm")
-        m2.metric("SpO2", f"%{last_val['SpO2']}")
-        m3.metric("Ateş", f"{last_val['Ateş']}°C")
-        risk_val = int((20-braden_score)*3 + itaki_score*4)
-        m4.metric("Risk Skoru", f"%{risk_val}")
-        m5.metric("Durum", status)
+    risk_val = int((20 - braden_score) * 3 + itaki_score * 4)
+    m4.metric("Risk Skoru", f"%{risk_val}")
+    m5.metric("Durum", status)
 
         st.divider()
 
@@ -210,6 +220,7 @@ with l_col:
         ))
 
     st.plotly_chart(fig, use_container_width=True)
+
 
 
 
