@@ -95,6 +95,13 @@ current_df = st.session_state.patients[selected_patient]
 
 if not current_df.empty:
 
+    # --- VERİ TİPİ DÜZELTME ---
+    current_df["Nabız"] = pd.to_numeric(current_df["Nabız"], errors="coerce")
+    current_df["SpO2"] = pd.to_numeric(current_df["SpO2"], errors="coerce")
+    current_df["Ateş"] = pd.to_numeric(current_df["Ateş"], errors="coerce")
+    current_df["Hareket_Skoru"] = pd.to_numeric(current_df["Hareket_Skoru"], errors="coerce")
+    current_df["Zaman"] = pd.to_datetime(current_df["Zaman"], errors="coerce")
+
     status, nandas, nics, color = analyze_logic(
         current_df,
         nurse_note,
@@ -149,6 +156,7 @@ if not current_df.empty:
 
 else:
     st.info("Henüz sensör verisi yok. Lütfen 'Yeni Sensör Verisi Al' butonuna basın.")
+
 
 
 
