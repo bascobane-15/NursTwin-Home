@@ -129,14 +129,27 @@ if not current_df.empty:
     with l_col:
         st.subheader("📈 Vital Bulgular Trend")
 
-        fig = px.line(
-            current_df,
-            x="Zaman",
-            y=["Nabız", "SpO2", "Ateş"],
-            markers=True
-        )
+        # --- PRO LEVEL LONG FORMAT ---
+df_long = current_df.melt(
+    id_vars="Zaman",
+    value_vars=["Nabız", "SpO2", "Ateş"],
+    var_name="Parametre",
+    value_name="Değer"
+)
 
-        st.plotly_chart(fig, use_container_width=True, key="vital_chart")
+fig = px.line(
+    df_long,
+    x="Zaman",
+    y="Değer",
+    color="Parametre",
+    markers=True
+)
+
+st.plotly_chart(fig, use_container_width=True, key="vital_chart")
+
+
+st.plotly_chart(fig, use_container_width=True, key="vital_chart")
+
 
     with r_col:
         st.subheader("🧠 AI Klinik Yorum")
@@ -156,6 +169,7 @@ if not current_df.empty:
 
 else:
     st.info("Henüz sensör verisi yok. Lütfen 'Yeni Sensör Verisi Al' butonuna basın.")
+
 
 
 
