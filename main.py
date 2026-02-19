@@ -181,17 +181,22 @@ if not current_df.empty:
     # Grafik ve Bakım Planı
     l_col, r_col = st.columns([2, 1])
         
+l_col, r_col = st.columns(2)
+
 with l_col:
+    st.subheader("📈 Vital Bulgular Trend")
+    fig = px.line(
+        current_df,
+        x="Zaman",
+        y=["Nabız", "SpO2", "Ateş"],
+        markers=True
+    )
+    st.plotly_chart(fig, use_container_width=True)
 
-   if st.button("Yeni Sensör Verisi Al"):
-    new_data = get_simulated_data(selected_patient)
+with r_col:
+    st.subheader("🧠 AI Klinik Yorum")
+    st.write("Durum:", status)
 
-    df = st.session_state.patients[selected_patient]
-    df = pd.concat([pd.DataFrame([new_data]), df]).head(50)
-
-    st.session_state.patients[selected_patient] = df
-
-    st.rerun()
 
 
     st.subheader("📈 Dijital İkiz Trend Analizi")
@@ -220,6 +225,7 @@ with l_col:
         ))
 
     st.plotly_chart(fig, use_container_width=True)
+
 
 
 
