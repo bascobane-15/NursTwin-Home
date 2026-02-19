@@ -106,14 +106,34 @@ with st.sidebar:
     # ✅ Sensör Butonu Sidebar İçinde
     st.subheader("📡 Canlı Sensör")
 
-    if st.button("Yeni Sensör Verisi Al"):
-        st.session_state.sensor_data = {
-            "Nabız": random.randint(60, 110),
-            "Tansiyon": random.randint(100, 150),
-            "Oksijen": random.randint(90, 100)
-        }
+   # 1️⃣ BUTON
+if st.button("Yeni Sensör Verisi Al"):
+    new_data = get_simulated_data(selected_patient)
 
-    st.divider()
+    df = st.session_state.patients[selected_patient]
+    df = pd.concat([pd.DataFrame([new_data]), df]).head(50)
+
+    st.session_state.patients[selected_patient] = df
+    st.rerun()
+
+# 2️⃣ BURAYA YAZACAKSIN 👇👇👇
+current_df = st.session_state.patients[selected_patient]
+
+st.write("Satır sayısı:", len(current_df))
+st.write(current_df)
+
+# 3️⃣ ANALİZ
+if not current_df.empty:
+    status, nandas, nics, color = analyze_logic(
+        current_df,
+        nurse_note,
+        braden_score,
+        itaki_score
+    )
+
+# 4️⃣ GRAFİK
+l_col, r_col = st.columns(2)
+
 
     # ✅ Hemşire Notu Butonun İçinde Değil!
     nurse_note = st.text_area(
@@ -230,6 +250,7 @@ with r_col:
     use_container_width=True,
     key="vital_trend_chart"
 )
+
 
 
 
