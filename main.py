@@ -127,17 +127,6 @@ with st.sidebar:
     report_placeholder = st.empty()
 
 
-# --------------------------------------------------------
-# ANA PANEL (Sidebar DIŞI)
-# --------------------------------------------------------
-
-st.subheader("📊 Canlı Sensör Verileri")
-
-if "sensor_data" in st.session_state:
-    df = pd.DataFrame([st.session_state.sensor_data])
-    st.bar_chart(df)
-
-
 # --- 5. ANA PANEL (KATMAN C) ---
 st.title(f"🩺 NursTwin-Home: {selected_patient} Dijital İkiz Paneli")
 
@@ -186,7 +175,15 @@ with l_col:
         st.session_state.patients[selected_patient] = df
 
     current_df = st.session_state.patients[selected_patient]
+# --------------------------------------------------------
+# ANA PANEL (Sidebar DIŞI)
+# --------------------------------------------------------
 
+st.subheader("📊 Canlı Sensör Verileri")
+
+if "sensor_data" in st.session_state:
+    df = pd.DataFrame([st.session_state.sensor_data])
+    st.bar_chart(df)
     st.subheader("📈 Dijital İkiz Trend Analizi")
 
     fig = go.Figure()
@@ -213,6 +210,7 @@ with l_col:
         ))
 
     st.plotly_chart(fig, use_container_width=True)
+
 
 
 
