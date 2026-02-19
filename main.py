@@ -128,9 +128,9 @@ with placeholder.container():
         # Grafik ve Bakım Planı
         l_col, r_col = st.columns([2, 1])
         
-  with l_col:
+with l_col:
   
-  if st.button("Yeni Sensör Verisi Al"):
+if st.button("Yeni Sensör Verisi Al"):
         new_data = simulate_sensor_data()
         df = st.session_state.patients[selected_patient]
         df = pd.concat([df, pd.DataFrame([new_data])], ignore_index=True)
@@ -142,7 +142,7 @@ with placeholder.container():
 
     fig = go.Figure()
 
-  if not current_df.empty:
+if not current_df.empty:
         last_val = current_df.iloc[-1]
 
         fig.add_trace(go.Scatter(
@@ -164,6 +164,7 @@ with placeholder.container():
         ))
 
   st.plotly_chart(fig, use_container_width=True)
+
 
 
 
