@@ -126,7 +126,7 @@ if not current_df.empty:
     # --- GRAFİK + ANALİZ ---
     l_col, r_col = st.columns([2, 1])
 
-    with l_col:
+with l_col:
         st.subheader("📈 Vital Bulgular Trend")
 
     # --- PRO LEVEL LONG FORMAT ---
@@ -150,7 +150,7 @@ st.plotly_chart(fig, use_container_width=True, key="vital_chart")
 
 st.plotly_chart(fig, use_container_width=True, key="vital_chart")
 
-    with r_col:
+with r_col:
         st.subheader("🧠 AI Klinik Yorum")
         st.write("Durum:", status)
         st.write("Olası NANDA Tanıları:", nandas if nandas else "Yok")
@@ -168,6 +168,7 @@ st.plotly_chart(fig, use_container_width=True, key="vital_chart")
 
 else:
     st.info("Henüz sensör verisi yok. Lütfen 'Yeni Sensör Verisi Al' butonuna basın.")
+
 
 
 
