@@ -128,32 +128,44 @@ while True:
         # Grafik ve Bakım Planı
         l_col, r_col = st.columns([2, 1])
         
-        with l_col:
-            if st.button("Yeni Sensör Verisi Al"):
-                new_data = simulate_sensor_data()
-                df = st.session_state.patients[selected_patient]
-                df = pd.concat([df, pd.DataFrame([new_data])], ignore_index=True)
-            st.session_state.patients[selected_patient] = df
+      with l_col:
 
-            st.subheader("📈 Dijital İkiz Trend Analizi")
-            fig = go.Figure()
-            fig.add_trace(go.Scatter(y=current_df["Nabız"].iloc[::-1], name="Mevcut Nabız", line=dict(color='red', width=2)))
-            # Gelecek Tahmini (AI Katmanı)
-            future_y = [last_val['Nabız'], last_val['Nabız'] + (6 if last_val['Nabız'] > 95 else -2)]
-            fig.add_trace(go.Scatter(x=[len(current_df), len(current_df)+3], y=future_y, name="Tahmin (AI)", line=dict(color='gray', dash='dot')))
-            st.plotly_chart(fig, use_container_width=True)
+    if st.button("Yeni Sensör Verisi Al"):
+        new_data = simulate_sensor_data()
+        df = st.session_state.patients[selected_patient]
+        df = pd.concat([df, pd.DataFrame([new_data])], ignore_index=True)
+        st.session_state.patients[selected_patient] = df
 
-        with r_col:
-            st.subheader("📋 Karar Destek (NIC)")
-            st.markdown(f"**Aktif NANDA Tanıları:**\n{', '.join(nandas) if nandas else 'Normal'}")
-            st.divider()
-            for nic in nics:
-                st.checkbox(nic, key=f"{nic}_{selected_patient}_{time.time()}")
+    current_df = st.session_state.patients[selected_patient]
 
-        st.subheader("📂 Gerçek Zamanlı Sistem Kayıtları")
-        st.dataframe(current_df.head(10), use_container_width=True)
+    st.subheader("📈 Dijital İkiz Trend Analizi")
 
-    time.sleep(3)
+    fig = go.Figure()
+
+    if not current_df.empty:
+        last_val = current_df.iloc[-1]
+
+        fig.add_trace(go.Scatter(
+            y=current_df["Nabız"],
+            name="Mevcut Nabız",
+            line=dict(color='red', width=2)
+        ))
+
+        future_y = [
+            last_val["Nabız"],
+            last_val["Nabız"] + (6 if last_val["Nabız"] > 95 else -2)
+        ]
+
+        fig.add_trace(go.Scatter(
+            x=[len(current_df)-1, len(current_df)+2],
+            y=future_y,
+            name="Tahmin (AI)",
+            line=dict(color='gray', dash='dot')
+        ))
+
+    st.plotly_chart(fig, use_container_width=True)
+
+
 
 
 
