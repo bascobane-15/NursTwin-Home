@@ -108,11 +108,11 @@ while True:
     check_mobile_alerts(status, nandas, selected_patient)
 
     # Rapor Butonu Güncelleme
-    if not current_df.empty:
+if not current_df.empty:
         report_link = create_report_download(current_df, nurse_note, status, nandas, selected_patient)
         report_placeholder.markdown(report_link, unsafe_allow_html=True)
 
-    with placeholder.container():
+ with placeholder.container():
         # Üst Metrik Kartları
         m1, m2, m3, m4, m5 = st.columns(5)
         last_val = current_df.iloc[0]
@@ -128,9 +128,9 @@ while True:
         # Grafik ve Bakım Planı
         l_col, r_col = st.columns([2, 1])
         
-      with l_col:
-
-    if st.button("Yeni Sensör Verisi Al"):
+  with l_col:
+  
+  if st.button("Yeni Sensör Verisi Al"):
         new_data = simulate_sensor_data()
         df = st.session_state.patients[selected_patient]
         df = pd.concat([df, pd.DataFrame([new_data])], ignore_index=True)
@@ -142,7 +142,7 @@ while True:
 
     fig = go.Figure()
 
-    if not current_df.empty:
+  if not current_df.empty:
         last_val = current_df.iloc[-1]
 
         fig.add_trace(go.Scatter(
@@ -163,7 +163,8 @@ while True:
             line=dict(color='gray', dash='dot')
         ))
 
-    st.plotly_chart(fig, use_container_width=True)
+  st.plotly_chart(fig, use_container_width=True)
+
 
 
 
