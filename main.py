@@ -128,7 +128,7 @@ while True:
         # Grafik ve Bakım Planı
         l_col, r_col = st.columns([2, 1])
         
-       with l_col:
+        with l_col:
             if st.button("Yeni Sensör Verisi Al"):
                 new_data = simulate_sensor_data()
                 df = st.session_state.patients[selected_patient]
@@ -154,6 +154,7 @@ while True:
         st.dataframe(current_df.head(10), use_container_width=True)
 
     time.sleep(3)
+
 
 
 
