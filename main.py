@@ -35,17 +35,15 @@ def analyze_logic(df, note, braden, itaki):
     last = df.iloc[0]
     risks, nics = [], []
 
-    # 1️⃣ Düşme Riski
     if last["Nabız"] > 105 or itaki > 12 or "baş dönmesi" in note.lower():
         risks.append("NANDA: Düşme Riski (00155)")
         nics.extend(["NIC: Düşmeleri Önleme (6490)", "NIC: Çevre Düzenlemesi (6486)"])
 
-    # 2️⃣ Basınç Yaralanması Riski
     if df["Hareket_Skoru"].head(5).mean() < 30 or braden < 14:
         risks.append("NANDA: Basınç Yaralanması Riski (00249)")
         nics.extend(["NIC: Pozisyon Yönetimi (0840)", "NIC: Basınçlı Bölge Bakımı (3500)"])
 
-    # 3️⃣ Hipertermi (YENİ EKLENDİ)
+    # ✅ YENİ EKLENEN BLOK – Hipertermi
     if last["Ateş"] >= 38:
         risks.append("NANDA: Hipertermi (00007)")
         nics.extend(["NIC: Ateş Yönetimi (3740)", "NIC: Enfeksiyon İzlemi (6540)"])
@@ -179,6 +177,7 @@ if not current_df.empty:
         st.markdown(report_link, unsafe_allow_html=True)
 else:
         st.info("Henüz sensör verisi yok. Lütfen 'Yeni Sensör Verisi Al' butonuna basın.")
+
 
 
 
