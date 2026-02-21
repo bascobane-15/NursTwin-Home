@@ -59,9 +59,6 @@ def create_report_download(df, note, status, nandas, patient_name):
     return f'<a href="data:file/txt;base64,{b64}" download="rapor.txt">📥 Klinik Raporu İndir</a>'
 
 # --- 4. SIDEBAR ---
-
-with st.sidebar:
-   # --- SIDEBAR ---
 with st.sidebar:
 
     st.header("👥 Hasta Portföyü")
@@ -176,6 +173,7 @@ if not current_df.empty:
         st.markdown(report_link, unsafe_allow_html=True)
 else:
         st.info("Henüz sensör verisi yok. Lütfen 'Yeni Sensör Verisi Al' butonuna basın.")
+
 
 
 
