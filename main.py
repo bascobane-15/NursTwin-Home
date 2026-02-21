@@ -72,7 +72,15 @@ with st.sidebar:
 
     st.subheader("📝 Hemşire Gözlem")
 
-    nurse_note = st.text_area("Hemşire Notu")
+    if "nurse_note" not in st.session_state:
+    st.session_state.nurse_note = ""
+
+st.text_area(
+    "Hemşire Notu",
+    key="nurse_note"
+)
+
+nurse_note = st.session_state.nurse_note
 
     braden_score = st.slider("Braden Skoru", 6, 23, 16)
     itaki_score = st.slider("Itaki Skoru", 0, 20, 8)
@@ -165,6 +173,7 @@ if not current_df.empty:
         st.markdown(report_link, unsafe_allow_html=True)
 else:
         st.info("Henüz sensör verisi yok. Lütfen 'Yeni Sensör Verisi Al' butonuna basın.")
+
 
 
 
