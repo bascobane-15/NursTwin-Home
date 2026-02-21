@@ -35,13 +35,20 @@ def analyze_logic(df, note, braden, itaki):
     last = df.iloc[0]
     risks, nics = [], []
 
+    # 1️⃣ Düşme Riski
     if last["Nabız"] > 105 or itaki > 12 or "baş dönmesi" in note.lower():
         risks.append("NANDA: Düşme Riski (00155)")
         nics.extend(["NIC: Düşmeleri Önleme (6490)", "NIC: Çevre Düzenlemesi (6486)"])
 
+    # 2️⃣ Basınç Yaralanması Riski
     if df["Hareket_Skoru"].head(5).mean() < 30 or braden < 14:
         risks.append("NANDA: Basınç Yaralanması Riski (00249)")
         nics.extend(["NIC: Pozisyon Yönetimi (0840)", "NIC: Basınçlı Bölge Bakımı (3500)"])
+
+    # 3️⃣ Hipertermi (YENİ EKLENDİ)
+    if last["Ateş"] >= 38:
+        risks.append("NANDA: Hipertermi (00007)")
+        nics.extend(["NIC: Ateş Yönetimi (3740)", "NIC: Enfeksiyon İzlemi (6540)"])
 
     status = "⚠️ KRİTİK" if len(risks) > 1 else "🟡 UYARI" if len(risks) == 1 else "✅ STABİL"
     color = "red" if status == "⚠️ KRİTİK" else "orange" if status == "🟡 UYARI" else "green"
@@ -57,7 +64,6 @@ def create_report_download(df, note, status, nandas, patient_name):
 
     b64 = base64.b64encode(report_text.encode()).decode()
     return f'<a href="data:file/txt;base64,{b64}" download="rapor.txt">📥 Klinik Raporu İndir</a>'
-
 # --- 4. SIDEBAR ---
 with st.sidebar:
 
@@ -173,6 +179,7 @@ if not current_df.empty:
         st.markdown(report_link, unsafe_allow_html=True)
 else:
         st.info("Henüz sensör verisi yok. Lütfen 'Yeni Sensör Verisi Al' butonuna basın.")
+
 
 
 
