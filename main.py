@@ -132,7 +132,7 @@ if not current_df.empty:
     m4.metric("Risk Skoru", f"%{risk_val}")
     m5.metric("Durum", status)
 
-    st.divider()
+    st.divider() 
 
     # --- GRAFİK + ANALİZ ---
     l_col, r_col = st.columns([2, 1])
@@ -177,6 +177,7 @@ if not current_df.empty:
         st.markdown(report_link, unsafe_allow_html=True)
 else:
         st.info("Henüz sensör verisi yok. Lütfen 'Yeni Sensör Verisi Al' butonuna basın.")
+
 
 
 
